@@ -1,13 +1,16 @@
 import numpy as np
 import cv2
 
-Dark_red_LowerLimit = np.array([170, 150, 150], dtype=np.uint8)  # Lower limit for red hue  WORKS
-Dark_red_UpperLimit = np.array([180, 255, 255], dtype=np.uint8)  # Upper limit for red hue WORKS
+# Dark_red_LowerLimit = np.array([170, 150, 150], dtype=np.uint8)  # Lower limit for red hue  WORKS
+# Dark_red_UpperLimit = np.array([180, 255, 255], dtype=np.uint8)  # Upper limit for red hue WORKS
+#
+# Red_LowerLimit = np.array([0, 150, 150], dtype=np.uint8)
+# Red_upperLimit = np.array([10, 255, 255], dtype=np.uint8)
 
-Red_LowerLimit = np.array([0, 150, 150], dtype=np.uint8)
-Red_upperLimit = np.array([10, 255, 255], dtype=np.uint8)
+green_lower = np.array([50, 50, 50], dtype=np.uint8)
+green_upper = np.array([90, 255, 255], dtype=np.uint8)
 
-kernel = np.ones((5, 5), np.uint8)
+kernel = np.ones((25, 25), np.uint8)
 
 # Initializing Video Capture #
 cap = cv2.VideoCapture(0)
@@ -16,9 +19,11 @@ cap = cv2.VideoCapture(0)
 while True:
     ret, frame = cap.read()
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-    mask_dark_red = cv2.inRange(hsv, Dark_red_LowerLimit, Dark_red_UpperLimit)
-    mask_red = cv2.inRange(hsv, Red_LowerLimit, Red_upperLimit)
-    mask = mask_red + mask_dark_red
+    mask = cv2.inRange(hsv, green_lower, green_upper)
+    # mask_dark_red = cv2.inRange(hsv, Dark_red_LowerLimit, Dark_red_UpperLimit)
+    # mask_red = cv2.inRange(hsv, Red_LowerLimit, Red_upperLimit)
+    #mask = cv2.adaptiveThreshold(mask, 100, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 115, 1)
+
     mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
     mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
 
