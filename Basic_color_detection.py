@@ -20,13 +20,8 @@ while True:
     ret, frame = cap.read()
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
     mask = cv2.inRange(hsv, green_lower, green_upper)
-    # mask_dark_red = cv2.inRange(hsv, Dark_red_LowerLimit, Dark_red_UpperLimit)
-    # mask_red = cv2.inRange(hsv, Red_LowerLimit, Red_upperLimit)
-    #mask = cv2.adaptiveThreshold(mask, 100, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 115, 1)
-
     mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
     mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
-
     segemented_color = cv2.bitwise_and(frame, frame, mask=mask)
     mask_contours, hierarchy = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
